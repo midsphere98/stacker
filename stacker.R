@@ -24,6 +24,7 @@ st_name <- readline("# Type specimen name for identification : ")
 datatype <- readline("# Type data extention(.csv or .txt only) : ")
 data_path <- readline("# Type file directory : ")
 
+print(paste0("Data type is : ", datatype, " . proceed? (y/n) : "))
 # break point threshold(default = 0.3)
 threshold <- 0.3
 # graph limit
