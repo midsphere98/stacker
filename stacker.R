@@ -56,25 +56,45 @@ data_processing <- function(datatype, data_path) {
     print("invalid extention. please choose .csv / .txt only.")
   }
   # Data preprocess : data combine and calculate
+  # 1. collect data wit file_id
   combined_data  <-  bind_rows(data_list, .id = "file_id")
+  # 2. fetch data name (not full path)
   combined_data$file_id <- basename(combined_data$file_id)
+  # 3. changing column name in START X and START Y into X Y
   combined_data <- rename(combined_data, "X" = "START X", "Y" = "START Y")
   combined_data <- combined_data %>%
-    arrange("file_id") %>%
-    group_by("file_id") %>%
+    arrange(file_id) %>%
+    group_by(file_id) %>%
     mutate(slope = c(NA, diff(Y) / diff(X)))
   return(combined_data)
 }
-
+# Calculate max-min value
 max_min <- function(datainput) {
-  calc_data <- datainput %>%
-    group_by(file_id)
-    slice(which.max(X), which.min(X))
-    mutate(length_between_points = dist(cbind(X, Y)))
+  threshold_data <- datainput %>%
+    group_by(file_id)%>%
+    slice(which.max(X), which.min(X))%>%
+    mutate(length_between_points = dist(cbind(X, Y)))%>%
+    return (threshold_data)
 }
+# data process for Growth Line
+modify_to_odd <- function(x) {
+  if (length(x) %% 2 == 0) {
+    # For even-length groups, modify the data into odd number
+    x <- x[-length(x) %/% 2]
+  }
+  return(x)
+}
+
 # execute function
 data_list  <-  data_processing(datatype, data_path)
-calc_data <- max_min(data_list)
+
+# create "flat" boundary
 filtered_data <- subset(data_list, slope >= -threshold &
                           slope <= threshold)
+
+calc_data <- max_min(filtered_data)
+
+length_val <- calc_data %>%
+  distinct(length_between_points, .keep_all = TRUE)
+
 
