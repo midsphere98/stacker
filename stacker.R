@@ -85,16 +85,53 @@ modify_to_odd <- function(x) {
   return(x)
 }
 
+axis_calc <- function(dat) {
+  axis_dat <- dat %>%
+    group_by(file_id) %>%
+    summarize(median = median(modify_to_odd(X))) %>%
+    left_join(dat, axis_dat, by = "file_id") %>%
+    filter(near(X, median))
+  return(axis_dat)
+}
 # execute function
 data_list  <-  data_processing(datatype, data_path)
 
 # create "flat" boundary
 filtered_data <- subset(data_list, slope >= -threshold &
                           slope <= threshold)
-
-calc_data <- max_min(filtered_data)
-
-length_val <- calc_data %>%
+# extract max point and min point
+break_point <- max_min(filtered_data)
+# calculate length between two points
+length_val <- break_point %>%
   distinct(length_between_points, .keep_all = TRUE)
+# calculate axis
+axis_val <- axis_calc(filtered_data)
 
+# PLOT DATA
+print("data calculate complete. plot data...")
+# main plot
+stal <- ggplot(data_list, aes(x = X, y = Y, )) +
+  geom_path(aes(color = file_id)) +
+  # add axial plot
+  geom_path(data = axis_val,
+            mapping =
+              aes(x = X, y = Y),
+            color = "blue") +
+  # top line plotting
+  geom_point(data = filtered_data, # apex line
+             aes(x = X, y = Y),
+             size = 0.5,
+             shape = 2,
+             color = "red") +
+  # Apex Point plot
+  geom_point(data = break_point, # BP
+             aes(x = X, y = Y),
+             color = "black",
+             size = 1) +
+  labs(title = paste0(st_name, " STACKER REPORT"),
+       subtitle = threshold,
+       x = "X-axis Label",
+       y = "Y-axis Label") +
+  theme_minimal() +
+  ylim(0, data_limit_X)
 
