@@ -69,9 +69,9 @@ data_processing <- function(datatype, data_path) {
 # Calculate max-min value
 max_min <- function(datainput) {
   threshold_data <- datainput %>%
-    group_by(file_id)%>%
-    slice(which.max(X), which.min(X))%>%
-    mutate(length_between_points = dist(cbind(X, Y)))%>%
+    group_by(file_id) %>%
+    slice(which.max(X), which.min(X)) %>%
+    mutate(length_between_points = dist(cbind(X, Y))) %>%
     return (threshold_data)
 }
 # data process for Growth Line
@@ -108,7 +108,7 @@ axis_val <- axis_calc(filtered_data)
 # PLOT DATA
 print("data calculate complete. plot data...")
 # main plot
-data_limit_X <- 15
+data_limit_X <- 12
 data_limit_Y <- 30
 stal <- ggplot(data_list, aes(x = X, y = Y, )) +
   geom_path(aes(color = file_id)) +
@@ -137,3 +137,12 @@ stal <- ggplot(data_list, aes(x = X, y = Y, )) +
   coord_fixed(ratio = 1)
 
 print("data plot ready. type stal or plt for data plot")
+stal
+# save your files 
+p_select <- readline("would you want to save graph into .PDF? (y/n)")
+if (p_select == "y") {
+  ggsave(paste0(st_name, ".pdf"), plot = stal) 
+} else if (p_select == "n") {
+  break
+}
+
