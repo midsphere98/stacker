@@ -28,8 +28,6 @@ print(paste0("Data type is : ", datatype, " . proceed? (y/n) : "))
 # break point threshold(default = 0.3)
 threshold <- 0.3
 # graph limit
-data_limit_X <- 50
-data_limit_Y <- 30
 
 # data inspect function
 data_processing <- function(datatype, data_path) {
@@ -110,6 +108,8 @@ axis_val <- axis_calc(filtered_data)
 # PLOT DATA
 print("data calculate complete. plot data...")
 # main plot
+data_limit_X <- 15
+data_limit_Y <- 30
 stal <- ggplot(data_list, aes(x = X, y = Y, )) +
   geom_path(aes(color = file_id)) +
   # add axial plot
