@@ -133,5 +133,7 @@ stal <- ggplot(data_list, aes(x = X, y = Y, )) +
        x = "X-axis Label",
        y = "Y-axis Label") +
   theme_minimal() +
-  ylim(0, data_limit_X)
+  ylim(0, data_limit_X)+
+  coord_fixed(ratio = 1)
 
+print("data plot ready. type stal or plt for data plot")
