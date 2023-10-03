@@ -59,7 +59,7 @@ data_processing <- function(datatype, data_path) {
   # 2. fetch data name (not full path)
   combined_data$file_id <- basename(combined_data$file_id)
   # 3. changing column name in START X and START Y into X Y
-  combined_data <- rename(combined_data, "X" = "START X", "Y" = "START Y")
+  combined_data <- rename(combined_data, "X" = "START.X", "Y" = "START.Y")
   combined_data <- combined_data %>%
     arrange(file_id) %>%
     group_by(file_id) %>%
@@ -108,8 +108,9 @@ axis_val <- axis_calc(filtered_data)
 # PLOT DATA
 print("data calculate complete. plot data...")
 # main plot
-data_limit_X <- 12
-data_limit_Y <- 30
+data_limit_X <- max(length_val$X)
+data_limit_Y <- max(length_val$Y) + 0.2
+
 stal <- ggplot(data_list, aes(x = X, y = Y, )) +
   geom_path(aes(color = file_id)) +
   # add axial plot
@@ -133,16 +134,22 @@ stal <- ggplot(data_list, aes(x = X, y = Y, )) +
        x = "X-axis Label",
        y = "Y-axis Label") +
   theme_minimal() +
-  ylim(0, data_limit_X)+
+  ylim(0, data_limit_Y) +
   coord_fixed(ratio = 1)
 
-print("data plot ready. type stal or plt for data plot")
-stal
+print("data plot ready.")
+print(stal)
 # save your files 
-p_select <- readline("would you want to save graph into .PDF? (y/n)")
-if (p_select == "y") {
-  ggsave(paste0(st_name, ".pdf"), plot = stal) 
+d_select <- readline("save calculated data into .csv? (y/n) : ")
+if (d_select == "y") {
+  write.csv(length_val, paste0(st_name, ".csv"), row.names = FALSE)
 } else if (p_select == "n") {
   break
 }
 
+p_select <- readline("would you want to save graph into .PDF? (y/n)")
+if (p_select == "y") {
+  ggsave(paste0(st_name, ".pdf"), plot = stal)
+} else if (p_select == "n") {
+  break
+}
