@@ -1,7 +1,7 @@
-# EPL_STACKER Ver 0.1.0
+# EPL_STACKER Ver 0.1.1
 # written by Jungwon Choi
 # eplchoi@kangwon.ac.kr
-# SEP 06 2023
+# OCT 03 2023
 
 # this is stacking patterns measurement software written with R
 # before operation, stalagmite's laminae data must be obtained.
