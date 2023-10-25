@@ -26,7 +26,7 @@ data_path <- readline("# Type file directory : ")
 
 print(paste0("Data type is : ", datatype, " . proceed? (y/n) : "))
 # break point threshold(default = 0.3)
-threshold <- 0.3
+threshold <- 0.35
 # graph limit
 
 # data inspect function
@@ -59,7 +59,7 @@ data_processing <- function(datatype, data_path) {
   # 2. fetch data name (not full path)
   combined_data$file_id <- basename(combined_data$file_id)
   # 3. changing column name in START X and START Y into X Y
-  combined_data <- rename(combined_data, "X" = "START.X", "Y" = "START.Y")
+  combined_data <- rename(combined_data, "X" = "START X", "Y" = "START Y")
   combined_data <- combined_data %>%
     arrange(file_id) %>%
     group_by(file_id) %>%
